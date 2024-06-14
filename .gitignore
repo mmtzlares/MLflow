@@ -154,6 +154,49 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
+# Docker volumes and anonymous volumes data
+volumes/
+**/volumes/
+*.volume
+
+# Docker build files
+**/target/
+**/build/
+**/.tmp/
+
+# Temporary files generated during Docker build
+**/temp/
+**/tmp/
+
+# Ignore all log files and temporary files
+*.log
+tmp/
+
+# Node modules if you use Node.js in any service
+node_modules/
+
+# Environment files that may contain sensitive information
+.env*
+!*.env.example  # Ensure that example environment files are not ignored
+
+# General build directories
+**/dist/
+**/out/
+**/output/
+
+# Compiled binary and executable files
+**/*.exe
+**/*.dll
+**/*.so
+**/*.o
+**/*.a
+**/bin/
+**/obj/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
 #  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore

@@ -1,23 +1,24 @@
-version: "1"
+version: "3.8"
 
 services:
   # PostgreSQL database service configuration
   db:
-    restart: always  # Ensures the container always restarts if it stops
-    image: postgres  # Uses the official PostgreSQL Docker image
-    container_name: mlflow_db  # Custom name for the container
+    restart: always
+    image: postgres
+    platform: linux/amd64  # Emulation for compatibility
+    container_name: mlflow_db
     expose:
-      - "${PG_PORT}"  # Exposes PostgreSQL port to linked services, not to the host
+      - "${PG_PORT}"
     networks:
-      - backend  # Connects to the backend network
+      - backend
     environment:
-      - POSTGRES_USER=${PG_USER}  # PostgreSQL user
-      - POSTGRES_PASSWORD=${PG_PASSWORD}  # PostgreSQL password
-      - POSTGRES_DATABASE=${PG_DATABASE}  # Database name
+      - POSTGRES_USER=${PG_USER}
+      - POSTGRES_PASSWORD=${PG_PASSWORD}
+      - POSTGRES_DATABASE=${PG_DATABASE}
     volumes:
-      - ./db_data:/var/lib/postgresql/data/  # Mounts the volume for persistent database storage
+      - ./db_data:/var/lib/postgresql/data/
     healthcheck:
-      test: ["CMD", "pg_isready", "-p", "${PG_PORT}", "-U", "${PG_USER}"]  # Health check to ensure PostgreSQL is ready
+      test: ["CMD", "pg_isready", "-p", "${PG_PORT}", "-U", "${PG_USER}"]
       interval: 5s
       timeout: 5s
       retries: 3
@@ -28,12 +29,12 @@ services:
     image: minio/minio
     container_name: mlflow_minio
     volumes:
-      - ./minio_data:/data  # Data volume for MinIO storage
+      - ./minio_data:/data
     ports:
-      - "${MINIO_PORT}:9000"  # Port mapping for MinIO API
-      - "${MINIO_CONSOLE_PORT}:9001"  # Port mapping for MinIO Console
+      - "${MINIO_PORT}:9000"
+      - "${MINIO_CONSOLE_PORT}:9001"
     networks:
-      - frontend  # Connects to both frontend and backend networks
+      - frontend
       - backend
     environment:
       - MINIO_ROOT_USER=${MINIO_ROOT_USER}
@@ -42,7 +43,7 @@ services:
       - MINIO_PORT=${MINIO_PORT}
       - MINIO_STORAGE_USE_HTTPS=${MINIO_STORAGE_USE_HTTPS}
       - MINIO_CONSOLE_ADDRESS=${MINIO_CONSOLE_ADDRESS}
-    command: server /data  # Command to start MinIO server
+    command: server /data
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
       interval: 30s
@@ -52,14 +53,15 @@ services:
   # Service to create buckets in MinIO using MinIO Client
   create_buckets:
     image: minio/mc
+    platform: linux/amd64  # Emulation for compatibility
     container_name: mlflow_create_buckets
     depends_on:
-      - s3  # Depends on the MinIO service being available
+      - s3
     networks:
       - backend
     entrypoint: >
       /bin/sh -c '
-      sleep 5;  # Waits for 5 seconds before executing the next commands
+      sleep 5;
       /usr/bin/mc config host add s3 http://s3:${MINIO_PORT} ${MINIO_ACCESS_KEY} ${MINIO_SECRET_ACCESS_KEY} --api S3v4;
       [[ ! -z "`/usr/bin/mc ls s3 | grep challenge`" ]] || /usr/bin/mc mb s3/${MLFLOW_BUCKET_NAME};
       /usr/bin/mc policy download s3/${MLFLOW_BUCKET_NAME};
@@ -69,13 +71,14 @@ services:
   # MLflow tracking server configuration
   tracking_server:
     restart: always
-    build: ./mlflow  # Builds the MLflow Docker image from the local directory
+    build: ./mlflow
     image: mlflow_server
+    platform: linux/amd64  # Emulation for compatibility
     container_name: mlflow_server
     depends_on:
-      - db  # Depends on the PostgreSQL database
+      - db
     ports:
-      - "${MLFLOW_PORT}:5000"  # Exposes MLflow port for access
+      - "${MLFLOW_PORT}:5000"
     networks:
       - frontend
       - backend
@@ -98,14 +101,15 @@ services:
 
   # Optuna dashboard service configuration
   optuna_dashboard:
-    image: ghcr.io/optuna/optuna-dashboard:latest  # Uses the latest Optuna dashboard image from GitHub Container Registry
+    image: ghcr.io/optuna/optuna-dashboard:latest
+    platform: linux/amd64  # Emulation for compatibility
     container_name: optuna_dashboard
     depends_on:
-      - db  # Depends on the PostgreSQL service
+      - db
     ports:
-      - "8080:8080"  # Exposes port 8080 for dashboard access
+      - "8080:8080"
     environment:
-      OPTUNA_DASHBOARD_DATABASE_URL: postgresql://${PG_USER}:${PG_PASSWORD}@db:${PG_PORT}/${PG_DATABASE}  # Database URL for Optuna
+      OPTUNA_DASHBOARD_DATABASE_URL: postgresql://${PG_USER}:${PG_PASSWORD}@db:${PG_PORT}/${PG_DATABASE}
     networks:
       - backend
     healthcheck:
@@ -115,12 +119,13 @@ services:
       retries: 3
       start_period: 10s
 
-volumes:
-  db_data:
-  minio_data:
-
 networks:
   frontend:
     driver: bridge
   backend:
     driver: bridge
+
+volumes:
+  db_data:
+  minio_data:
+
