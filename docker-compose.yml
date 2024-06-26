@@ -100,12 +100,12 @@ services:
       timeout: 10s
       retries: 3
 
+volumes:
+  db_data:
+  minio_data:
+
 networks:
   frontend:
     driver: bridge
   backend:
     driver: bridge
-
-volumes:
-  db_data:
-  minio_data:
