@@ -1,5 +1,5 @@
 # MLflow
-Local dev set up using Postgres and MinIO as backend store solutions. Start the services with: 
+This repo demonstrates a simple Optuna optimized XGBoost model using MLflow, Postgres and MinIO. 
 ```
 $ docker-compose --env-file .env up -d --build
 ```
