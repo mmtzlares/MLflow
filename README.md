@@ -24,4 +24,8 @@ Navigate to http://localhost:9001, create a bucket named "mlflow", a ```MINIO_AC
 ```
 python3 -m MLflow/xgboost/model.py
 ```
-Everything will automatically be logged onto the backend stores and the MLflow UI can be accessed through http://localhost:5001 for model tracing and evaluation. 
+Everything will be automatically logged onto the backend stores and the MLflow UI can be accessed through http://localhost:5001 for model evaluation.
+> [!NOTE]
+> The optimized model URI will be displayed in the terminal once the run finishes.
+
+The model can now be registered and deployed locally, as a Docker Image or to a K8s cluster. For a K8s deployment, one would use ```storageUri: s3://<bucket_name>/<run_id>/path/to/script``` in the config file and deploy.    
