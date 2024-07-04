@@ -8,7 +8,7 @@ Additionally, the repository outlines steps to deploy the optimized model on a K
 
 ## Prerequisites
 Before you start, ensure you have the following installed:
-- Python (tested on > 3.10)
+- Python (tested on 3.10)
 - Docker
 - Kubernetes cluster
 
