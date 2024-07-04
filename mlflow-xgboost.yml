@@ -1,0 +1,12 @@
+apiVersion: "serving.kserve.io/v1beta1"
+kind: "InferenceService"
+metadata:
+  name: "mlflow-xgboost-regressor"
+  namespace: "mlflow-kserve-test"
+spec:
+  predictor:
+    model:
+      modelFormat:
+        name: mlflow
+      protocolVersion: v2
+      storageUri: "s3://mlflow-artifacts/1/e14af1efff7f43a9818ed8f54e8b2229/artifacts/model"
