@@ -20,3 +20,4 @@ cd Mlflow
 pip3 install -r requirements.txt
 docker-compose --env-file .env up -d --build
 ```
+Navigate to http://localhost:9001, create a bucket named "mlflow", a ```MINIO_ACCESS_KEY``` ,  ```MINIO_SECRET_ACCESS_KEY```, and update the ```.env``` file with these values. Finally, restart the containers with theses new values. 
