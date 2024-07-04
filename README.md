@@ -16,7 +16,7 @@ Before you start, ensure you have the following installed:
 Clone the repo and start the services:
 ```
 git clone https://github.com/mmtzlares/MLflow.git
-cd Mlflow
+cd MLflow
 pip3 install -r requirements.txt
 docker-compose --env-file .env up -d --build
 ```
