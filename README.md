@@ -20,4 +20,8 @@ cd Mlflow
 pip3 install -r requirements.txt
 docker-compose --env-file .env up -d --build
 ```
-Navigate to http://localhost:9001, create a bucket named "mlflow", a ```MINIO_ACCESS_KEY``` ,  ```MINIO_SECRET_ACCESS_KEY```, and update the ```.env``` file with these values. Finally, restart the containers with theses new values. 
+Navigate to http://localhost:9001, create a bucket named "mlflow", a ```MINIO_ACCESS_KEY``` ,  ```MINIO_SECRET_ACCESS_KEY```, and update the ```.env``` file with these values. Finally, restart the containers and run the model.
+```
+python3 -m MLflow/xgboost/model.py
+```
+Everything will automatically be logged onto the backend stores and the MLflow UI can be accessed through http://localhost:5001 for model tracing and evaluation. 
